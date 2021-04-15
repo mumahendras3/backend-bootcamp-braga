@@ -1,0 +1,23 @@
+{
+  "name": "fastify-intro",
+  "version": "1.0.0",
+  "description": "Intro to fastify",
+  "main": "server.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "dev": "nodemon server.js"
+  },
+  "keywords": [
+    "fastify",
+    "intro"
+  ],
+  "author": "mumahendras3",
+  "license": "ISC",
+  "dependencies": {
+    "fastify": "^3.14.2",
+    "fastify-static": "^4.0.1"
+  },
+  "devDependencies": {
+    "nodemon": "^2.0.7"
+  }
+}
