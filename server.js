@@ -1,12 +1,8 @@
 // Require the framework and instantiate it
 const fastify = require('fastify')()
 const fastifyStatic = require('fastify-static');
-const path = require('path')
 
-fastify.register(fastifyStatic, {
-  root: path.join(__dirname, 'public'),
-  prefix: '/', // optional: default '/'
-})
+fastify.register(fastifyStatic, require('./config/static').public)
 
 fastify.get('/', function (req, reply) {
   return reply.sendFile('index.html') // serving path.join(__dirname, 'public', 'myHtml.html') directly
