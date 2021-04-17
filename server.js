@@ -1,6 +1,7 @@
 // Require the framework and instantiate it
 const fastify = require('fastify')()
 const fastifyStatic = require('fastify-static');
+const port = process.env.PORT;
 
 fastify.register(fastifyStatic, require('./config/static').public)
 
@@ -9,7 +10,7 @@ fastify.get('/', function (req, reply) {
 })
 
 // Run the server!
-fastify.listen(5000, (err) => {
+fastify.listen(port, (err) => {
   if (err) {
     fastify.log.error(err)
     process.exit(1)
