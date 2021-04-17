@@ -9,7 +9,7 @@ fastify.get('/', function (req, reply) {
 })
 
 // Run the server!
-fastify.listen(3000, (err) => {
+fastify.listen(5000, (err) => {
   if (err) {
     fastify.log.error(err)
     process.exit(1)
