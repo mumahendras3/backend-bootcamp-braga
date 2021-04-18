@@ -1,14 +1,16 @@
 // Require the framework and instantiate it
 const fastify = require('fastify')({ logger: true })
+// Require fastify-static and instantiate it
 const fastifyStatic = require('fastify-static')
-const port = process.env.PORT
 
-fastify.register(fastifyStatic, require('./config/static').public)
+// Constants
+const port = process.env.PORT || 5000 // default port is 5000
 
-// Declare a route
-fastify.get('/', async (request, reply) => {
-  return reply.sendFile('index.html') // serving path.join(__dirname, 'public', 'myHtml.html') directly
-})
+// Define the static website prefixed root paths
+fastify.register(fastifyStatic, require('./prefixed-roots').public)
+
+// Define the routes
+fastify.register(require('./routes.js'))
 
 // Run the server!
 const start = async () => {
