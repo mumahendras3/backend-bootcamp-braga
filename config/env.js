@@ -2,11 +2,13 @@ const path = require("path");
 
 const schema = {
   type: "object",
-  required: ["PORT"],
+  required: ["PORT", "DATABASE_URL"],
   properties: {
     PORT: {
       type: "string",
-      default: 3000,
+    },
+    DATABASE_URL: {
+      type: "string",
     },
   },
 };
@@ -19,4 +21,4 @@ const options = {
   },
 };
 
-module.exports = { options: options };
+module.exports = options;

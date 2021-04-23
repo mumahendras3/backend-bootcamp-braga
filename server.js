@@ -1,12 +1,16 @@
 // Require the framework and instantiate it
-const fastify = require("fastify")({ logger: true });
+const fastify = require("fastify")({ logger: false });
+
+// Register fastify-env plugin
+fastify.register(require("fastify-env"), require("./config/env"));
+
+// Registering fastify-postgres through a wrapper script in ./config/pgsql.js
+// to be able to access fastify.config.DATABASE_URL and pass it to the
+// fastify-postgres plugin
+fastify.register(require("./config/pgsql"));
 
 // Register server-side rendering plugin (point of view)
-fastify.register(require("point-of-view"), {
-  engine: {
-    ejs: require("ejs"), // Using EJS as the templates engine
-  },
-});
+fastify.register(require("point-of-view"), require("./config/ssr"));
 
 // Define the static website prefixed root paths
 fastify.register(
@@ -17,23 +21,23 @@ fastify.register(
 // Define the routes
 fastify.register(require("./routes/static"));
 fastify.register(require("./routes/ssr"));
+fastify.register(require("./routes/api.js"), { prefix: "/api" });
 
-// Function wrapper to start the server
-const start = async (fastify) => {
-  try {
-    await fastify.listen(fastify.config.PORT, "0.0.0.0");
-  } catch (err) {
-    fastify.log.error(err);
+// Start the fastify server after all the plugins have been loaded
+fastify.ready().then(
+  () => {
+    console.log("Fastify successfully booted!");
+    // Listening on PORT (defined by environment variable)
+    fastify
+      .listen(fastify.config.PORT, "0.0.0.0")
+      .then((address) => console.log(`Server listening on ${address}`))
+      .catch((err) => {
+        console.error("Error starting server:", err);
+        process.exit(1);
+      });
+  },
+  (err) => {
+    console.error("Error booting fastify:", err);
     process.exit(1);
   }
-};
-
-// Register fastify-env plugin and start the server based on the .env values
-fastify
-  .register(require("fastify-env"), require("./config/fastify-env").options)
-  .ready((err) => {
-    if (err) console.error(err);
-
-    // Start the server, passing the fastify instance that holds the informations parsed from .env
-    start(fastify);
-  });
+);
