@@ -18,6 +18,23 @@ CREATE TABLE portfolio_items (
 );
 
 -- @block
+-- Create a table
+CREATE TABLE resume_entries (
+    id SERIAL PRIMARY KEY,
+    "column" SMALLINT,
+    title VARCHAR(255),
+    items TEXT[]
+);
+-- @block
+-- Create a table
+CREATE TABLE test (
+    id SERIAL PRIMARY KEY,
+    "column" SMALLINT,
+    title VARCHAR(255),
+    items TEXT[]
+);
+
+-- @block
 -- Inserting data to the new table
 INSERT INTO portfolio_items (filter, img_src, title, summary, gallery_href, gallery_title)
 VALUES
@@ -26,11 +43,11 @@ VALUES
 
 -- @block
 -- Read from a table
-SELECT * FROM portfolio_items;
+SELECT * FROM resume_entries;
 
 -- @block
 -- Remove table
-DROP TABLE portfolio_items;
+DROP TABLE resume_entries;
 
 -- @block
 -- Update row

@@ -1,4 +1,6 @@
-const { messageSchema, paramsSchema, portfolioItemSchema } = require('../schema/portfolio-items');
+const { messageSchema, paramsSchema } = require("../schema/common");
+const { portfolioItemSchema } = require("../schema/portfolio-items");
+const { resumeEntrySchema } = require("../schema/resume-entries");
 
 module.exports = {
   routePrefix: "/api/docs",
@@ -22,6 +24,10 @@ module.exports = {
         name: "Portfolio Items",
         description: "For manipulating portfolio items",
       },
+      {
+        name: "Resume Entries",
+        description: "For manipulating resume entries",
+      }
     ],
     components: {
       securitySchemes: {
@@ -30,8 +36,9 @@ module.exports = {
           scheme: "bearer",
         },
       },
-      schemas: { messageSchema, paramsSchema, portfolioItemSchema },
+      schemas: { messageSchema, paramsSchema, portfolioItemSchema, resumeEntrySchema },
     },
   },
   exposeRoute: true,
+  // hideUntagged: true,
 };
