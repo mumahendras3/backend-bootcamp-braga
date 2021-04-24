@@ -40,5 +40,5 @@ module.exports = {
     },
   },
   exposeRoute: true,
-  // hideUntagged: true,
+  hideUntagged: true,
 };

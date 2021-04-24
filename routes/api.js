@@ -5,7 +5,6 @@ const { portfolioItemSchema } = require("../schema/portfolio-items");
 const { resumeEntrySchema } = require("../schema/resume-entries");
 
 async function routes(fastify, options) {
-
   /* Portfolio Items */
   // List available items
   fastify.get(
@@ -184,11 +183,12 @@ async function routes(fastify, options) {
             properties: {
               ...messageSchema.properties,
               data: {
-                type: "array",
-                items: { ...portfolioItemSchema, required: [] },
+                ...portfolioItemSchema,
+                required: [],
               },
             },
-            description: "Failed to update item with the specified id using the given data",
+            description:
+              "Failed to update item with the specified id using the given data",
           },
         },
       },
@@ -217,7 +217,7 @@ async function routes(fastify, options) {
             updated: rows[0],
           };
         else {
-          res.code(500);
+          res.code(400);
           return {
             message: `Failed to update item with id=${req.params.id} using the given data`,
             data: req.body,
@@ -235,11 +235,9 @@ async function routes(fastify, options) {
       schema: {
         tags: ["Resume Entries"],
         response: {
-          response: {
-            210: {
-              ...messageSchema,
-              description: "No entries found",
-            },
+          210: {
+            ...messageSchema,
+            description: "No entries found",
           },
         },
       },
@@ -262,9 +260,9 @@ async function routes(fastify, options) {
         params: paramsSchema,
         tags: ["Resume Entries"],
         response: {
-          "5xx": {
+          210: {
             ...messageSchema,
-            description: "Failed to list the resume entry",
+            description: "No entry with the specified id found",
           },
         },
       },
@@ -275,9 +273,9 @@ async function routes(fastify, options) {
       } = await fastify.pg.query("SELECT * FROM resume_entries WHERE id=$1", [
         req.params.id,
       ]);
-      if (rows[0]) return rows[0];
+      if (rows.length) return rows[0];
       else {
-        res.code(500);
+        res.code(210);
         return {
           message: `No entry with id=${req.params.id} found`,
         };
@@ -293,8 +291,15 @@ async function routes(fastify, options) {
         body: { type: "array", items: resumeEntrySchema },
         tags: ["Resume Entries"],
         response: {
-          "5xx": {
+          400: {
             ...messageSchema,
+            properties: {
+              ...messageSchema.properties,
+              data: {
+                type: "array",
+                items: { ...resumeEntrySchema, required: [] },
+              },
+            },
             description: "Failed to insert the given data",
           },
         },
@@ -323,7 +328,7 @@ async function routes(fastify, options) {
             inserted: rows,
           };
         else {
-          res.code(500);
+          res.code(400);
           return {
             message: "Failed to insert the given data",
             data: req.body,
@@ -341,9 +346,9 @@ async function routes(fastify, options) {
         params: paramsSchema,
         tags: ["Resume Entries"],
         response: {
-          "5xx": {
+          210: {
             ...messageSchema,
-            description: "Failed to delete the resume entry",
+            description: "No entry with the specified id found",
           },
         },
       },
@@ -362,7 +367,7 @@ async function routes(fastify, options) {
             deleted: rows[0],
           };
         else {
-          res.code(500);
+          res.code(210);
           return {
             message: `No entry with id=${req.params.id} found`,
           };
@@ -380,9 +385,17 @@ async function routes(fastify, options) {
         body: { ...resumeEntrySchema, required: [] },
         tags: ["Resume Entries"],
         response: {
-          "5xx": {
+          400: {
             ...messageSchema,
-            description: "Failed to update the resume entry",
+            properties: {
+              ...messageSchema.properties,
+              data: {
+                ...resumeEntrySchema,
+                required: [],
+              },
+            },
+            description:
+              "Failed to update entry with the specified id using the given data",
           },
         },
       },
@@ -394,12 +407,8 @@ async function routes(fastify, options) {
         Object.keys(req.body).forEach((key, index) => {
           query +=
             index == 0
-              ? format(" %I = $%s", key.replace(/[A-Z]/g, "_$&"), index + 1)
-              : format(
-                  ", %I = $%s",
-                  key.replace(/[A-Z]/g, (match) => `_${match.toLowerCase()}`),
-                  index + 1
-                );
+              ? format(" %I = $%s", key, index + 1)
+              : format(", %I = $%s", key, index + 1);
           values.push(req.body[key]);
         });
         query += ` WHERE id=$${Object.keys(req.body).length + 1} RETURNING *`;
@@ -411,7 +420,7 @@ async function routes(fastify, options) {
             updated: rows[0],
           };
         else {
-          res.code(500);
+          res.code(400);
           return {
             message: `Failed to update entry with id=${req.params.id} using the given data`,
             data: req.body,
@@ -422,14 +431,14 @@ async function routes(fastify, options) {
   );
 
   // Testing
-  fastify.get("/test", async (req, res) => {
-    const { rows } = await fastify.pg.query("SELECT * FROM test");
-    console.log(rows.length);
-    if (rows.length) return rows;
-    else {
-      res.code(204);
-    }
-  });
+  // fastify.get("/test", async (req, res) => {
+  //   const { rows } = await fastify.pg.query("SELECT * FROM test");
+  //   console.log(rows.length);
+  //   if (rows.length) return rows;
+  //   else {
+  //     res.code(204);
+  //   }
+  // });
 }
 
 module.exports = routes;
