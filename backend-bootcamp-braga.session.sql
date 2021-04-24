@@ -31,3 +31,7 @@ SELECT * FROM portfolio_items;
 -- @block
 -- Remove table
 DROP TABLE portfolio_items;
+
+-- @block
+-- Update row
+UPDATE portfolio_items SET title = , WHERE id=4 RETURNING *;

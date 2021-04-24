@@ -12,6 +12,9 @@ fastify.register(require("./config/pgsql"));
 // Register server-side rendering plugin (point of view)
 fastify.register(require("point-of-view"), require("./config/ssr"));
 
+// Register swagger for automatically generated api docs
+fastify.register(require("fastify-swagger"), require("./config/swagger"));
+
 // Define the static website prefixed root paths
 fastify.register(
   require("fastify-static"),
@@ -21,12 +24,14 @@ fastify.register(
 // Define the routes
 fastify.register(require("./routes/static"));
 fastify.register(require("./routes/ssr"));
-fastify.register(require("./routes/api.js"), { prefix: "/api" });
+fastify.register(require("./routes/api"), { prefix: "/api" });
 
 // Start the fastify server after all the plugins have been loaded
 fastify.ready().then(
   () => {
     console.log("Fastify successfully booted!");
+    // Start swagger
+    fastify.swagger();
     // Listening on PORT (defined by environment variable)
     fastify
       .listen(fastify.config.PORT, "0.0.0.0")
