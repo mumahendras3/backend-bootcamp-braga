@@ -1,5 +1,6 @@
 const { messageSchema } = require("../schema/common");
 const { userCredentialSchema, token } = require("../schema/auth");
+const argon2 = require("argon2");
 
 async function routes(fastify, options) {
   fastify.post(
@@ -23,11 +24,12 @@ async function routes(fastify, options) {
     },
     async (req, res) => {
       const { email, password } = req.body;
+      const hashed_password = await argon2.hash(password);
       const {
         rows,
       } = await fastify.pg.query(
         "INSERT INTO user_auth (email, hashed_password) VALUES ($1, $2) RETURNING email",
-        [email, password]
+        [email, hashed_password]
       );
       if (rows.length)
         return { token: fastify.jwt.sign({ email: rows[0].email }) };
@@ -66,11 +68,10 @@ async function routes(fastify, options) {
         "SELECT hashed_password FROM user_auth WHERE email=$1",
         [email]
       );
-
       if (rows.length === 0) {
         res.code(400);
         return { message: `${email} is not registered` };
-      } else if (password !== rows[0].hashed_password) {
+      } else if (!(await argon2.verify(rows[0].hashed_password, password))) {
         res.code(400);
         return { message: `Incorrect password for ${email}` };
       }

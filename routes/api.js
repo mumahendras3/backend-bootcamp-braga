@@ -90,7 +90,7 @@ async function routes(fastify, options) {
       },
     },
     async (req, res) => {
-      if (req.user.email !== "test@test.org") {
+      if (req.user.email !== fastify.config.ADMIN_EMAIL) {
         res.code(403);
         return { message: "You are not allowed to perform this action" };
       }
@@ -163,7 +163,7 @@ async function routes(fastify, options) {
       },
     },
     async (req, res) => {
-      if (req.user.email !== "test@test.org") {
+      if (req.user.email !== fastify.config.ADMIN_EMAIL) {
         res.code(403);
         return { message: "You are not allowed to perform this action" };
       }
@@ -220,7 +220,7 @@ async function routes(fastify, options) {
       },
     },
     async (req, res) => {
-      if (req.user.email !== "test@test.org") {
+      if (req.user.email !== fastify.config.ADMIN_EMAIL) {
         res.code(403);
         return { message: "You are not allowed to perform this action" };
       }
@@ -342,7 +342,7 @@ async function routes(fastify, options) {
       },
     },
     async (req, res) => {
-      if (req.user.email !== "test@test.org") {
+      if (req.user.email !== fastify.config.ADMIN_EMAIL) {
         res.code(403);
         return { message: "You are not allowed to perform this action" };
       }
@@ -400,7 +400,7 @@ async function routes(fastify, options) {
       },
     },
     async (req, res) => {
-      if (req.user.email !== "test@test.org") {
+      if (req.user.email !== fastify.config.ADMIN_EMAIL) {
         res.code(403);
         return { message: "You are not allowed to perform this action" };
       }
@@ -457,7 +457,7 @@ async function routes(fastify, options) {
       },
     },
     async (req, res) => {
-      if (req.user.email !== "test@test.org") {
+      if (req.user.email !== fastify.config.ADMIN_EMAIL) {
         res.code(403);
         return { message: "You are not allowed to perform this action" };
       }

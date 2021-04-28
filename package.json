@@ -15,6 +15,7 @@
   "author": "mumahendras3",
   "license": "ISC",
   "dependencies": {
+    "argon2": "^0.27.2",
     "ejs": "^3.1.6",
     "fastify": "^3.14.2",
     "fastify-env": "^2.1.0",

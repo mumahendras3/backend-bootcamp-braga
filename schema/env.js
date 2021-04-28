@@ -1,7 +1,7 @@
 module.exports = {
   envSchema: {
     type: "object",
-    required: ["PORT", "DATABASE_URL", "JWT_SECRET"],
+    required: ["PORT", "DATABASE_URL", "JWT_SECRET", "ADMIN_EMAIL"],
     properties: {
       PORT: {
         type: "string",
@@ -10,6 +10,9 @@ module.exports = {
         type: "string",
       },
       JWT_SECRET: {
+        type: "string",
+      },
+      ADMIN_EMAIL: {
         type: "string",
       },
     },

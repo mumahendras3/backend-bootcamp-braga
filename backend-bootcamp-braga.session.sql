@@ -58,10 +58,10 @@ VALUES (
 -- @block
 -- Read from a table
 SELECT *
-FROM resume_entries;
+FROM user_auth;
 -- @block
 -- Remove table
-DROP TABLE resume_entries;
+DROP TABLE user_auth;
 -- @block
 -- Update row
 UPDATE portfolio_items
