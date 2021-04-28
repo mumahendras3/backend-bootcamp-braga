@@ -1,23 +1,12 @@
 const path = require("path");
-
-const schema = {
-  type: "object",
-  required: ["PORT", "DATABASE_URL"],
-  properties: {
-    PORT: {
-      type: "string",
-    },
-    DATABASE_URL: {
-      type: "string",
-    },
-  },
-};
+const { envSchema } = require("../schema/env");
 
 const options = {
   confKey: "config", // optional, default: 'config'
-  schema: schema,
+  schema: envSchema,
   dotenv: {
     path: path.posix.join(__dirname, "../.env"),
+    // debug: true,
   },
 };
 

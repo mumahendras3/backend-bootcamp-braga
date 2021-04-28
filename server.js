@@ -4,10 +4,16 @@ const fastify = require("fastify")({ logger: false });
 // Register fastify-env plugin
 fastify.register(require("fastify-env"), require("./config/env"));
 
+// Register fastify-helmet for basic header security
+// fastify.register(require("./config/helmet"));
+
 // Registering fastify-postgres through a wrapper script in ./config/pgsql.js
 // to be able to access fastify.config.DATABASE_URL and pass it to the
 // fastify-postgres plugin
 fastify.register(require("./config/pgsql"));
+
+// Register JSON Web Token plugin
+fastify.register(require("./config/jwt"));
 
 // Register server-side rendering plugin (point of view)
 fastify.register(require("point-of-view"), require("./config/ssr"));
@@ -25,6 +31,7 @@ fastify.register(
 fastify.register(require("./routes/static"));
 fastify.register(require("./routes/ssr"));
 fastify.register(require("./routes/api"), { prefix: "/api" });
+fastify.register(require("./routes/auth"), { prefix: "/api/auth" });
 
 // Start the fastify server after all the plugins have been loaded
 fastify.ready().then(

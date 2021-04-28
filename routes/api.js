@@ -65,7 +65,9 @@ async function routes(fastify, options) {
   fastify.post(
     "/portfolio_items/insert",
     {
+      preValidation: [fastify.authenticate],
       schema: {
+        security: [{ Bearer: [] }],
         body: { type: "array", items: portfolioItemSchema },
         tags: ["Portfolio Items"],
         response: {
@@ -80,10 +82,18 @@ async function routes(fastify, options) {
             },
             description: "Failed to insert the given data",
           },
+          403: {
+            ...messageSchema,
+            description: "Not authorized for the given action",
+          },
         },
       },
     },
     async (req, res) => {
+      if (req.user.email !== "test@test.org") {
+        res.code(403);
+        return { message: "You are not allowed to perform this action" };
+      }
       return fastify.pg.transact(async (client) => {
         let index = 0;
         let values = [];
@@ -135,7 +145,9 @@ async function routes(fastify, options) {
   fastify.delete(
     "/portfolio_items/delete/:id",
     {
+      preValidation: [fastify.authenticate],
       schema: {
+        security: [{ Bearer: [] }],
         params: paramsSchema,
         tags: ["Portfolio Items"],
         response: {
@@ -143,10 +155,18 @@ async function routes(fastify, options) {
             ...messageSchema,
             description: "No item with the specified id found",
           },
+          403: {
+            ...messageSchema,
+            description: "Not authorized for the given action",
+          },
         },
       },
     },
     async (req, res) => {
+      if (req.user.email !== "test@test.org") {
+        res.code(403);
+        return { message: "You are not allowed to perform this action" };
+      }
       return fastify.pg.transact(async (client) => {
         const {
           rows,
@@ -173,7 +193,9 @@ async function routes(fastify, options) {
   fastify.put(
     "/portfolio_items/update/:id",
     {
+      preValidation: [fastify.authenticate],
       schema: {
+        security: [{ Bearer: [] }],
         params: paramsSchema,
         body: { ...portfolioItemSchema, required: [] },
         tags: ["Portfolio Items"],
@@ -190,10 +212,18 @@ async function routes(fastify, options) {
             description:
               "Failed to update item with the specified id using the given data",
           },
+          403: {
+            ...messageSchema,
+            description: "Not authorized for the given action",
+          },
         },
       },
     },
     async (req, res) => {
+      if (req.user.email !== "test@test.org") {
+        res.code(403);
+        return { message: "You are not allowed to perform this action" };
+      }
       return fastify.pg.transact(async (client) => {
         let values = [];
         let query = "UPDATE portfolio_items SET";
@@ -287,7 +317,9 @@ async function routes(fastify, options) {
   fastify.post(
     "/resume_entries/insert",
     {
+      preValidation: [fastify.authenticate],
       schema: {
+        security: [{ Bearer: [] }],
         body: { type: "array", items: resumeEntrySchema },
         tags: ["Resume Entries"],
         response: {
@@ -302,10 +334,18 @@ async function routes(fastify, options) {
             },
             description: "Failed to insert the given data",
           },
+          403: {
+            ...messageSchema,
+            description: "Not authorized for the given action",
+          },
         },
       },
     },
     async (req, res) => {
+      if (req.user.email !== "test@test.org") {
+        res.code(403);
+        return { message: "You are not allowed to perform this action" };
+      }
       return fastify.pg.transact(async (client) => {
         let index = 0;
         let values = [];
@@ -342,7 +382,9 @@ async function routes(fastify, options) {
   fastify.delete(
     "/resume_entries/delete/:id",
     {
+      preValidation: [fastify.authenticate],
       schema: {
+        security: [{ Bearer: [] }],
         params: paramsSchema,
         tags: ["Resume Entries"],
         response: {
@@ -350,10 +392,18 @@ async function routes(fastify, options) {
             ...messageSchema,
             description: "No entry with the specified id found",
           },
+          403: {
+            ...messageSchema,
+            description: "Not authorized for the given action",
+          },
         },
       },
     },
     async (req, res) => {
+      if (req.user.email !== "test@test.org") {
+        res.code(403);
+        return { message: "You are not allowed to perform this action" };
+      }
       return fastify.pg.transact(async (client) => {
         const {
           rows,
@@ -380,7 +430,9 @@ async function routes(fastify, options) {
   fastify.put(
     "/resume_entries/update/:id",
     {
+      preValidation: [fastify.authenticate],
       schema: {
+        security: [{ Bearer: [] }],
         params: paramsSchema,
         body: { ...resumeEntrySchema, required: [] },
         tags: ["Resume Entries"],
@@ -397,10 +449,18 @@ async function routes(fastify, options) {
             description:
               "Failed to update entry with the specified id using the given data",
           },
+          403: {
+            ...messageSchema,
+            description: "Not authorized for the given action",
+          },
         },
       },
     },
     async (req, res) => {
+      if (req.user.email !== "test@test.org") {
+        res.code(403);
+        return { message: "You are not allowed to perform this action" };
+      }
       return fastify.pg.transact(async (client) => {
         let values = [];
         let query = "UPDATE resume_entries SET";
