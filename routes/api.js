@@ -245,12 +245,8 @@ async function routes(fastify, options) {
         Object.keys(req.body).forEach((key, index) => {
           query +=
             index == 0
-              ? format(" %I = $%s", key.replace(/[A-Z]/g, "_$&"), index + 1)
-              : format(
-                  ", %I = $%s",
-                  key.replace(/[A-Z]/g, (match) => `_${match.toLowerCase()}`),
-                  index + 1
-                );
+              ? format(" %I = $%s", key, index + 1)
+              : format(", %I = $%s", key, index + 1);
           values.push(req.body[key]);
         });
         query += ` WHERE id=$${Object.keys(req.body).length + 1} RETURNING *`;
