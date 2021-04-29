@@ -1,6 +1,6 @@
 <div class="col-lg-4 col-md-6 portfolio-item <%= item.filter %>">
     <div class="portfolio-wrap">
-      <img src="<%= item.imgSrc %>" class="img-fluid" alt="">
+      <img src="<%= item.img_src %>" class="img-fluid" alt="">
       <div class="portfolio-info">
         <h4>
           <%= item.title %>
@@ -9,8 +9,8 @@
           <%= item.summary %>
         </p>
         <div class="portfolio-links">
-          <a href="<%= item.galleryHref %>" data-gallery="portfolioGallery" class="portfolio-lightbox"
-            title="<%= item.galleryTitle %>"><i class="bx bx-plus"></i></a>
+          <a href="<%= item.gallery_href %>" data-gallery="portfolioGallery" class="portfolio-lightbox"
+            title="<%= item.gallery_title %>"><i class="bx bx-plus"></i></a>
           <a href="portfolio-details.html" class="portfolio-details-lightbox" data-glightbox="type: external"
             title="Portfolio Details"><i class="bx bx-link"></i></a>
         </div>
