@@ -1,5 +1,7 @@
 // Additional plugin to safely create dynamic SQL queries
 const format = require("pg-format");
+const QueryStream = require("pg-query-stream");
+const JSONStream = require("JSONStream");
 const { messageSchema, paramsSchema } = require("../schema/common");
 const { portfolioItemSchema } = require("../schema/portfolio-items");
 const { resumeEntrySchema } = require("../schema/resume-entries");
@@ -13,20 +15,33 @@ async function routes(fastify, options) {
       schema: {
         tags: ["Portfolio Items"],
         response: {
-          210: {
-            ...messageSchema,
-            description: "No items found",
+          200: {
+            type: "array",
+            items: {
+              type: "object",
+              properties: {
+                id: { type: "number" },
+                filter: { type: "string" },
+                img_src: { type: "string" },
+                title: { type: "string" },
+                summary: { type: "string" },
+                gallery_href: { type: "string" },
+                gallery_title: { type: "string" },
+              },
+            },
+            description: "Successfully returned the list of portfolio items",
           },
         },
       },
     },
     async (req, res) => {
-      const { rows } = await fastify.pg.query("SELECT * FROM portfolio_items");
-      if (rows.length) return rows;
-      else {
-        res.code(210);
-        return { message: "No items found" };
-      }
+      const client = await fastify.pg.connect();
+      const query = new QueryStream("SELECT * FROM portfolio_items");
+      const stream = client.query(query);
+      //release the client when the stream is finished
+      stream.on("end", client.release);
+      res.header("Content-Type", "application/json");
+      return stream.pipe(JSONStream.stringify());
     }
   );
 
@@ -265,20 +280,29 @@ async function routes(fastify, options) {
       schema: {
         tags: ["Resume Entries"],
         response: {
-          210: {
-            ...messageSchema,
-            description: "No entries found",
+          200: {
+            type: "array",
+            items: {
+              type: "object",
+              properties: {
+                column: { type: "number" },
+                title: { type: "string" },
+                items: { type: "array", items: { type: "string" } },
+              },
+            },
+            description: "Successfully returned the list of resume entries",
           },
         },
       },
     },
     async (req, res) => {
-      const { rows } = await fastify.pg.query("SELECT * FROM resume_entries");
-      if (rows.length) return rows;
-      else {
-        res.code(210);
-        return { message: "No entries found" };
-      }
+      const client = await fastify.pg.connect();
+      const query = new QueryStream("SELECT * FROM resume_entries");
+      const stream = client.query(query);
+      //release the client when the stream is finished
+      stream.on("end", client.release);
+      res.header("Content-Type", "application/json");
+      return stream.pipe(JSONStream.stringify());
     }
   );
 
@@ -492,12 +516,15 @@ async function routes(fastify, options) {
 
   // Testing
   // fastify.get("/test", async (req, res) => {
-  //   const { rows } = await fastify.pg.query("SELECT * FROM test");
-  //   console.log(rows.length);
-  //   if (rows.length) return rows;
-  //   else {
-  //     res.code(204);
-  //   }
+  //   const client = await fastify.pg.connect();
+  //   const query = new QueryStream("SELECT * FROM generate_series(0, $1) num", [
+  //     1000,
+  //   ]);
+  //   const stream = client.query(query);
+  //   //release the client when the stream is finished
+  //   stream.on("end", client.release);
+  //   res.header("Content-Type", "application/json");
+  //   return stream.pipe(JSONStream.stringify());
   // });
 }
 
