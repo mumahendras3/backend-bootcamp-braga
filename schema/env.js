@@ -1,7 +1,7 @@
 module.exports = {
   envSchema: {
     type: "object",
-    required: ["PORT", "DATABASE_URL", "JWT_SECRET", "ADMIN_EMAIL"],
+    required: ["PORT", "DATABASE_URL", "JWT_SECRET", "ADMIN_EMAIL", "BRAGA_EMAIL", "BRAGA_EMAIL_PASS"],
     properties: {
       PORT: {
         type: "string",
@@ -13,6 +13,12 @@ module.exports = {
         type: "string",
       },
       ADMIN_EMAIL: {
+        type: "string",
+      },
+      BRAGA_EMAIL: {
+        type: "string",
+      },
+      BRAGA_EMAIL_PASS: {
         type: "string",
       },
     },
