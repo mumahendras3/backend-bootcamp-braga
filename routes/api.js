@@ -117,11 +117,11 @@ async function routes(fastify, options) {
         req.body.forEach((portfolioItem, i) => {
           const {
             filter,
-            imgSrc,
+            img_src,
             title,
             summary,
-            galleryHref,
-            galleryTitle,
+            gallery_href,
+            gallery_title,
           } = portfolioItem;
           query +=
             i == 0
@@ -129,11 +129,11 @@ async function routes(fastify, options) {
               : `, ($${++index}, $${++index}, $${++index}, $${++index}, $${++index}, $${++index})`;
           values.push(
             filter,
-            imgSrc,
+            img_src,
             title,
             summary,
-            galleryHref,
-            galleryTitle
+            gallery_href,
+            gallery_title
           );
         });
         query += " RETURNING *";
@@ -510,17 +510,23 @@ async function routes(fastify, options) {
     }
   );
 
-  // Testing
+  // Testing undici
   // fastify.get("/test", async (req, res) => {
-  //   const client = await fastify.pg.connect();
-  //   const query = new QueryStream("SELECT * FROM generate_series(0, $1) num", [
-  //     1000,
-  //   ]);
-  //   const stream = client.query(query);
-  //   //release the client when the stream is finished
-  //   stream.on("end", client.release);
-  //   res.header("Content-Type", "application/json");
-  //   return stream.pipe(JSONStream.stringify());
+  //   const { request } = require("undici");
+
+  //   const { statusCode, headers, trailers, body } = await request(
+  //     'https://jsonplaceholder.typicode.com/todos/1'
+  //   );
+
+  //   console.log("response received", statusCode);
+  //   console.log("headers", headers);
+  //     let data = ""
+  //   for await (const chunk of body) {
+  //     data += chunk
+  //   }
+  //   console.log('data', data)
+  //   console.log("trailers", trailers);
+  //   return data;
   // });
 }
 
