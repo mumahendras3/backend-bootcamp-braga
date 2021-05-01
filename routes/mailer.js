@@ -41,7 +41,6 @@ async function routes(fastify, options) {
         text: `Message from ${name} (${email}):\n\n${message}`,
         html: `<h4>Message from ${name} (<a href="mailto:${email}">${email}</a>):</h4><p>${message}</p>`,
       });
-      console.log("info", info);
       if (/ OK /.test(info.response)) return "OK";
       else return "Failed to send the email";
     }

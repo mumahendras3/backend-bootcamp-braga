@@ -1,8 +1,4 @@
 module.exports = (instance) => {
-  console.log(
-    "default",
-    require("fastify-helmet").contentSecurityPolicy.getDefaultDirectives()
-  );
   return {
     contentSecurityPolicy: {
       directives: {
